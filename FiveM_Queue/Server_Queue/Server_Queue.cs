@@ -646,6 +646,7 @@ namespace Server
         {
             try
             {
+                int count = inQueue + inPriorityQueue;
                 if (count > 0 )
                 {
                             API.SetConvar("Wachtrij", "Aan  |  Aantal: " + count);
