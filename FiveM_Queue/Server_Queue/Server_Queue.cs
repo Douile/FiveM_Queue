@@ -672,7 +672,7 @@ namespace Server
         {
             try
             {
-                string conVarName = GetConvar("q_custom_convar",string.Empty);
+                string conVarName = API.GetConvar("q_custom_convar",string.Empty);
                 if (conVarName != string.Empty) {
                   API.ExecuteCommand($"sets ${conVarName} ${messages["ConVarQueueEmpty"]}");
                 }
