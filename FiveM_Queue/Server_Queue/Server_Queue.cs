@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -217,32 +217,6 @@ namespace Server
             {
                 Debug.WriteLine($"[{resourceName} - ERROR] - UpdateHostName()");
             }
-        }
-
-        private void UpdateConVars()
-        {
-          try
-          {
-            string conVarName = API.GetConvar("q_custom_convar", string.Empty);
-            if (conVarName == string.Empty) { return; }
-
-            if (API.GetConvar("q_set_custom_convar","false") == "true")
-            {
-              int count = inQueue + inPriorityQueue;
-              string conVarValue;
-              if (count > 0) {
-                conVarValue = string.Format($"{messages["ConVarQueueCount"]}", count);
-              } else {
-                conVarValue = $"{messages["ConVarQueueEmpty"]}";
-              }
-              API.SetConvar(conVarName,conVarValue);
-            }
-          }
-          catch (Exception)
-          {
-            Debug.WriteLine($"[{resourceName} - ERROR] - UpdateHostName()");
-          }
-
         }
 
         private int QueueCount()
@@ -672,7 +646,14 @@ namespace Server
         {
             try
             {
-                API.ExecuteCommand($"sets fivemqueue Enabled");
+                if (count > 0 )
+                {
+                            API.SetConvar("Wachtrij", "Aan  |  Aantal: " + count);
+                }
+                else
+                {
+                        API.SetConvar("Wachtrij", "Aan");
+                }
                 int attempts = 0;
                 while (attempts < 7)
                 {
@@ -705,7 +686,7 @@ namespace Server
                     if (API.GetResourceState("hardcap") != "started")
                     {
                         API.StartResource("hardcap");
-                        API.ExecuteCommand($"sets fivemqueue Disabled");
+                        API.ExecuteCommand($"sets Wachtrij Uit");
                     }
                     if (hostName != string.Empty) { API.SetConvar("sv_hostname", hostName); return; }
                 }
@@ -921,7 +902,6 @@ namespace Server
                     await Delay(100);
                     UpdateHostName();
                     UpdateStates();
-                    UpdateConVars();
                     await Delay(100);
                     BalanceReserved();
                     await Delay(1000);
