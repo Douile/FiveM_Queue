@@ -231,9 +231,9 @@ namespace Server
               int count = inQueue + inPriorityQueue;
               string conVarValue;
               if (count > 0) {
-                conVarValue = string.Format($"{messages["QueueCount"]}", count);
+                conVarValue = string.Format($"{messages["ConVarQueueCount"]}", count);
               } else {
-                conVarValue = $"{messages["QueueEmpty"]}";
+                conVarValue = $"{messages["ConVarQueueEmpty"]}";
               }
               API.SetConvar(conVarName,conVarValue);
             }

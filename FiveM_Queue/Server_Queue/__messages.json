@@ -9,7 +9,8 @@
   "Canceled": "Canceled from queue",
   "Error": "An error prevented deferrals",
   "Timeout": "Exceeded server owners maximum loading time threshold",
-  "QueueCount": "Aan | Aatal: {0}",
-  "QueueEmpty": "Aan",
+  "QueueCount": "[Queue: {0}]",
+  "ConVarQueueCount": "Aan  |  Aantal: {0}",
+  "ConVarQueueEmpty": "Aan",
   "Symbols": "No symbols or consecutive spaces are allowed in your name"
 }
