@@ -102,7 +102,7 @@ namespace Server
         {
             Debug.WriteLine($"Queue: {queue.Count}");
             Debug.WriteLine($"Priority Queue: {pQueue.Count}");
-            session.Where(k => k.Value == SessionState.Queue).ToList().ForEach(j => 
+            session.Where(k => k.Value == SessionState.Queue).ToList().ForEach(j =>
             {
                 Debug.WriteLine($"{j.Key} is in queue. Timer: {timer.TryGetValue(j.Key, out DateTime oldTimer)} Priority: {priority.TryGetValue(j.Key, out int oldPriority)}");
             });
@@ -760,21 +760,19 @@ namespace Server
                 while (!IsEverythingReady()) { await Delay(0); }
                 deferrals.update($"{messages["Gathering"]}");
                 string license = source.Identifiers["license"];
-                string steam = source.Identifiers["steam"];
                 if (license == null) { deferrals.done($"{messages["License"]}"); return; }
-                if (steam == null) { deferrals.done($"{messages["Steam"]}"); return; }
 
                 if (!allowSymbols && !ValidName(playerName)) { deferrals.done($"{messages["Symbols"]}"); return; }
 
                 bool banned = false;
-                if (Server_Banned.accounts.Exists(k => k.License == license && k.Steam == steam))
+                if (Server_Banned.accounts.Exists(k => k.License == license))
                 {
                     banned = true;
                 }
-                else if (Server_Banned.accounts.Exists(k => k.License == license || k.Steam == steam) || Server_Banned.newblacklist.Exists(k => k.License == license || k.Steam == steam))
+                else if (Server_Banned.accounts.Exists(k => k.License == license) || Server_Banned.newblacklist.Exists(k => k.License == license))
                 {
                     banned = true;
-                    Server_Banned.AutoBlacklist(new BannedAccount(license, steam));
+                    Server_Banned.AutoBlacklist(new BannedAccount(license, null));
                 }
 
                 if (banned)
@@ -790,12 +788,12 @@ namespace Server
                 }
                 sentLoading.TryAdd(license, source);
 
-                if (Server_Reserved.newwhitelist.Exists(k => k.License == license || k.Steam == steam))
+                if (Server_Reserved.newwhitelist.Exists(k => k.License == license))
                 {
-                    Server_Reserved.AutoWhitelist(new ReservedAccount(license, steam, Server_Reserved.newwhitelist.FirstOrDefault(k => k.License == license || k.Steam == steam).Reserve));
+                    Server_Reserved.AutoWhitelist(new ReservedAccount(license, null, Server_Reserved.newwhitelist.FirstOrDefault(k => k.License == license).Reserve));
                 }
 
-                if (Server_Reserved.accounts.Exists(k => k.License == license || k.Steam == steam))
+                if (Server_Reserved.accounts.Exists(k => k.License == license))
                 {
                     if (!reserved.TryAdd(license, Server_Reserved.accounts.FirstOrDefault(k => k.License == license).Reserve))
                     {
@@ -813,9 +811,9 @@ namespace Server
                     }
                 }
 
-                if (Server_Priority.newwhitelist.Exists(k => k.License == license || k.Steam == steam))
+                if (Server_Priority.newwhitelist.Exists(k => k.License == license))
                 {
-                    Server_Priority.AutoWhitelist(new PriorityAccount(license, steam, Server_Priority.newwhitelist.FirstOrDefault(k => k.License == license || k.Steam == steam).Priority));
+                    Server_Priority.AutoWhitelist(new PriorityAccount(license, null, Server_Priority.newwhitelist.FirstOrDefault(k => k.License == license).Priority));
                 }
                 if (Server_Priority.accounts.Exists(k => k.License == license))
                 {
