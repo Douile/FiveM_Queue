@@ -189,12 +189,21 @@ namespace Server
         {
             try
             {
+
                 if (hostName == string.Empty) { hostName = API.GetConvar("sv_hostname", string.Empty); }
                 if (hostName == string.Empty) { return; }
 
                 string concat = hostName;
                 bool editHost = false;
                 int count = inQueue + inPriorityQueue;
+                if (count > 0 )
+                {
+                            API.SetConvar("Wachtrij", "Aan  |  Aantal: " + count);
+                }
+                else
+                {
+                        API.SetConvar("Wachtrij", "Aan");
+                }
                 if (API.GetConvar("q_add_queue_count_before_server_name", "false") == "true")
                 {
                     editHost = true;
@@ -646,15 +655,7 @@ namespace Server
         {
             try
             {
-                int count = inQueue + inPriorityQueue;
-                if (count > 0 )
-                {
-                            API.SetConvar("Wachtrij", "Aan  |  Aantal: " + count);
-                }
-                else
-                {
-                        API.SetConvar("Wachtrij", "Aan");
-                }
+                API.ExecuteCommand($"sets Wachtrij Aan");
                 int attempts = 0;
                 while (attempts < 7)
                 {
