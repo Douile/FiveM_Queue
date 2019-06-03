@@ -672,7 +672,10 @@ namespace Server
         {
             try
             {
-                API.ExecuteCommand($"sets fivemqueue Enabled");
+                string conVarName = GetConvar("q_custom_convar",string.Empty);
+                if (conVarName != string.Empty) {
+                  API.ExecuteCommand($"sets ${conVarName} ${messages["ConVarQueueEmpty"]}");
+                }
                 int attempts = 0;
                 while (attempts < 7)
                 {
