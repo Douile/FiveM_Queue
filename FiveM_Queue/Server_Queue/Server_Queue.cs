@@ -219,6 +219,32 @@ namespace Server
             }
         }
 
+        private void UpdateConVars()
+        {
+          try
+          {
+            string conVarName = API.GetConvar("q_custom_convar", string.Empty);
+            if (conVarName == string.Empty) { return; }
+
+            if (API.GetConvar("q_set_custom_convar","false") == "true")
+            {
+              int count = inQueue + inPriorityQueue;
+              string conVarValue;
+              if (count > 0) {
+                conVarValue = string.Format($"{messages["QueueCount"]}", count);
+              } else {
+                conVarValue = $"{messages["QueueEmpty"]}";
+              }
+              API.SetConvar(conVarName,conVarValue);
+            }
+          }
+          catch (Exception)
+          {
+            Debug.WriteLine($"[{resourceName} - ERROR] - UpdateHostName()");
+          }
+
+        }
+
         private int QueueCount()
         {
             try
@@ -895,6 +921,7 @@ namespace Server
                     await Delay(100);
                     UpdateHostName();
                     UpdateStates();
+                    UpdateConVars();
                     await Delay(100);
                     BalanceReserved();
                     await Delay(1000);
